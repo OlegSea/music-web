@@ -23,6 +23,10 @@ export default function Player({songPath}) {
       >
         Continue
       </button>
+      <form>
+        <input type="text" name='percentage' />
+        <input type="submit" value='Submit' />
+      </form>
     </div>
   );
 }
