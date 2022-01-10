@@ -1,5 +1,5 @@
 import '../styles/globals.css';
-import { useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import PlayerContext from '../components/playerContext';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import PCMPlayer from 'pcm-player';
@@ -7,13 +7,14 @@ import PCMPlayer from 'pcm-player';
 
 function MyApp({ Component, pageProps }) {
   const player = useRef(null);
-  const { sendMessage, lastMessage, readyState } = useWebSocket('ws://localhost:8001/');
+//   const { sendMessage, lastMessage, readyState } = useWebSocket('ws://localhost:8001/');
+  const {songData, setSongData} = useState()
 
-  const fetchData = async (lastMessage, player) => {
-    const data = new Int16Array(await lastMessage.data.arrayBuffer());
-    player.volume(1);
-    player.feed(data);
-  };
+//   const fetchData = async (lastMessage, player) => {
+//     const data = new Int16Array(await lastMessage.data.arrayBuffer());
+//     player.volume(1);
+//     player.feed(data);
+//   };
 
   const initPCM = () => {
     const player = new PCMPlayer({
@@ -29,7 +30,9 @@ function MyApp({ Component, pageProps }) {
     if (player.current) player.current.destroy();
     console.log(player.current)
     player.current = initPCM();
-    sendMessage(`play ${songPath}`);
+    player.volume(1);
+    
+    player.feed(songData)
   };
 
   useEffect(() => {
