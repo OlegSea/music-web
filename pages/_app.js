@@ -1,11 +1,16 @@
 import '../styles/globals.css';
+<<<<<<< HEAD
 import { useRef, useEffect, useState } from 'react';
+=======
+import { useState, useRef, useEffect } from 'react';
+>>>>>>> d281f08fbc17296f8becfe0a820cf6c0cbf8a22b
 import PlayerContext from '../components/playerContext';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import PCMPlayer from 'pcm-player';
 
 function MyApp({ Component, pageProps }) {
   const player = useRef(null);
+<<<<<<< HEAD
   const [isPaused, setIsPaused] = useState(true);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const secondTimer = useRef(null);
@@ -25,6 +30,16 @@ function MyApp({ Component, pageProps }) {
       player.feed(data);
     } catch (error) {}
   };
+=======
+//   const { sendMessage, lastMessage, readyState } = useWebSocket('ws://localhost:8001/');
+  const {songData, setSongData} = useState()
+
+//   const fetchData = async (lastMessage, player) => {
+//     const data = new Int16Array(await lastMessage.data.arrayBuffer());
+//     player.volume(1);
+//     player.feed(data);
+//   };
+>>>>>>> d281f08fbc17296f8becfe0a820cf6c0cbf8a22b
 
   const initPCM = () => {
     const player = new PCMPlayer({
@@ -45,10 +60,16 @@ function MyApp({ Component, pageProps }) {
     } catch (error) {}
     if (player.current) player.current.destroy();
     player.current = initPCM();
+<<<<<<< HEAD
     secondTimer.current = setInterval(() => {
       setTimeElapsed((old) => old + 1);
     }, 1000);
     sendMessage(`play ${songPath}`);
+=======
+    player.volume(1);
+    
+    player.feed(songData)
+>>>>>>> d281f08fbc17296f8becfe0a820cf6c0cbf8a22b
   };
 
   const seek = (seconds) => {
