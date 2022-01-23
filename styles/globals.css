@@ -2,8 +2,10 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+  background: #2e2e2e;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
 }
 
 a {
@@ -13,4 +15,167 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.body {
+  width: 83vw;
+  /* height: 100vh; */
+  /* display: flex; */
+  /* padding-bottom:1px; */
+  /* flex: 1 1 auto; */
+}
+
+.sidebar {
+  width: 18rem;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  background: #1e1e1e;
+  color: #ffffff;
+  height: 100%;
+  float: left;
+  align-content: center;
+}
+
+.page-content {
+  /* float: left; */
+  margin-left: 18rem;
+  margin-bottom: 8.5%;
+  width: 100%;
+  /* height: 100%; */
+}
+
+.sidebar-element {
+  margin: 1rem;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  font-size: 2rem;
+}
+
+.sidebar-element-active {
+  color: #00bcd4;
+}
+
+.player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 6.75rem;
+  background: #1c1c1c;
+  float: bottom;
+  width: 100%;
+  display: flex;
+  /* align-content: center; */
+  /* justify-content: center; */
+}
+
+.song-info {
+  position: absolute;
+  font-size: 1.5rem;
+  margin-left: 8rem;
+  width: 30%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.song-name {
+  position: absolute;
+  font-size: 1.5rem;
+  margin-top: 2.25rem;
+  color: #ffffff;
+}
+
+.song-artist {
+  position: absolute;
+  font-size: 1.5rem;
+  margin-top: 4.25rem;
+  color: #5f5f5f;
+}
+
+.song-album {
+  position: absolute;
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+  color: #4f4f4f;
+}
+
+.song-pic {
+  position: absolute;
+  margin-left: 1rem;
+  margin-top: 0.25rem;
+}
+
+.player-controls {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.player-controls-buttons {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(269deg) brightness(102%) contrast(101%);
+}
+
+.length-bar {
+  position: relative;
+  top: 1rem;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  width: 48rem;
+  color: #00bcd4;
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+
+
+/*Chrome*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  input[type='range'] {
+    overflow: hidden;
+    width: 48rem;
+    -webkit-appearance: none;
+    background-color: #4f4f4f;
+  }
+  
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 15px;
+    -webkit-appearance: none;
+    color: #13bba4;
+    margin-top: -1px;
+  }
+  
+  input[type='range']::-webkit-slider-thumb {
+    width: 15px;
+    -webkit-appearance: none;
+    height: 15px;
+    cursor: ew-resize;
+    background: #ffffff;
+    box-shadow: -48rem 0 0 48rem #00bcd4;
+    border: 1px solid #000000;
+  }
+
+}
+/** FF*/
+input[type="range"]::-moz-range-progress {
+background-color: #00bcd4; 
+}
+input[type="range"]::-moz-range-track {  
+background-color: #ffffff;
+}
+/* IE*/
+input[type="range"]::-ms-fill-lower {
+background-color: #00bcd4; 
+}
+input[type="range"]::-ms-fill-upper {  
+background-color: #ffffff;
 }

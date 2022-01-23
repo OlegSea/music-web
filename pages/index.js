@@ -1,25 +1,37 @@
-import styles from '../styles/Home.module.css';
 import { useEffect, useState } from 'react';
-import Player from '../components/player';
 import { fetchData } from '../libs/rq';
+import { useContext } from 'react';
+import PlayerContext from '../components/playerContext';
+import SideBar from '../components/sideBar';
+import Layout from '../components/layout';
 
 export default function Home() {
-  const [currentSong, setCurrentSong] = useState('')
-  const [songs, updateSongs] = useState([])
+  const [songs, updateSongs] = useState([]);
+  const { startPlaying, currentSong, setCurrentSong } = useContext(PlayerContext);
 
   useEffect(() => {
-    fetchData('/api/songs', updateSongs)
-  }, [])
+    fetchData('/api/songs', updateSongs);
+  }, []);
 
   return (
-    <div>
-      <Player songPath={currentSong}/>
-      <p>{currentSong}</p>
+    <Layout currentPage={'All Songs'}>
+      <p>{currentSong['song_file_name']}</p>
       <ul>
         {songs.map((song) => {
-          return (<li key={song['song_id']}><button onClick={() => setCurrentSong(song['song_file_name'])}>{song['song_name']}</button></li>)
+          return (
+            <li key={song['song_id']}>
+              <button
+                onClick={() => {
+                  setCurrentSong(song);
+                  startPlaying(song['song_file_name']);
+                }}
+              >
+                {song['song_name']}
+              </button>
+            </li>
+          );
         })}
       </ul>
-    </div>
+    </Layout>
   );
 }

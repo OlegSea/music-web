@@ -1,18 +1,29 @@
 import '../styles/globals.css';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import PlayerContext from '../components/playerContext';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import PCMPlayer from 'pcm-player';
 
-
 function MyApp({ Component, pageProps }) {
   const player = useRef(null);
-  const { sendMessage, lastMessage, readyState } = useWebSocket('ws://localhost:8001/');
+  const [isPaused, setIsPaused] = useState(true);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const secondTimer = useRef(null);
+  const [wsUrl, setWsUrl] = useState('ws://localhost:8001/');
+  const [currentSong, setCurrentSong] = useState({});
+  const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(wsUrl, {
+    shouldReconnect: () => {
+      return true;
+    },
+    reconnectInterval: 100,
+  });
 
-  const fetchData = async (lastMessage, player) => {
+  const parseNewData = async (lastMessage, player) => {
     const data = new Int16Array(await lastMessage.data.arrayBuffer());
-    player.volume(1);
-    player.feed(data);
+    player.volume(0.25);
+    try {
+      player.feed(data);
+    } catch (error) {}
   };
 
   const initPCM = () => {
@@ -26,20 +37,67 @@ function MyApp({ Component, pageProps }) {
   };
 
   const startPlaying = (songPath) => {
+    setIsPaused(false);
+    clearInterval(secondTimer.current);
+    setTimeElapsed(0);
+    try {
+      getWebSocket().close();
+    } catch (error) {}
     if (player.current) player.current.destroy();
-    console.log(player.current)
     player.current = initPCM();
+    secondTimer.current = setInterval(() => {
+      setTimeElapsed((old) => old + 1);
+    }, 1000);
     sendMessage(`play ${songPath}`);
+  };
+
+  const seek = (seconds) => {
+    try {
+      getWebSocket().close();
+    } catch (error) {}
+    if (player.current) player.current.destroy();
+    player.current = initPCM();
+    setTimeElapsed(seconds);
+    sendMessage(`seek ${seconds} ${currentSong['song_file_name']}`);
+  };
+
+  const pausePlay = () => {
+    if (isPaused) {
+      player.current.continue();
+      secondTimer.current = setInterval(() => {
+        setTimeElapsed((old) => old + 1);
+      }, 1000);
+    } else {
+      player.current.pause();
+      clearInterval(secondTimer.current);
+    }
+    console.log(timeElapsed);
+    setIsPaused(!isPaused);
   };
 
   useEffect(() => {
     if (lastMessage) {
-      fetchData(lastMessage, player.current);
+      parseNewData(lastMessage, player.current);
     }
   }, [lastMessage]);
 
+  useEffect(() => {
+    setWsUrl(`ws://${/.*:\/\/(.*):.*$/g.exec(window.location.href)[1]}:8001/`);
+  }, [setWsUrl]);
+
   return (
-    <PlayerContext.Provider value={{ player: player, startPlaying: startPlaying }}>
+    <PlayerContext.Provider
+      value={{
+        player: player,
+        startPlaying: startPlaying,
+        currentSong: currentSong,
+        setCurrentSong: setCurrentSong,
+        isPaused: isPaused,
+        pausePlay: pausePlay,
+        seek: seek,
+        timeElapsed: timeElapsed,
+      }}
+    >
       <Component {...pageProps} />
     </PlayerContext.Provider>
   );
